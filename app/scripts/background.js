@@ -1,69 +1,43 @@
 'use strict';
 
+console.log('HNTip: Event Page');
+
 chrome.runtime.onInstalled.addListener(function (details) {
-  console.log('previousVersion', details.previousVersion);
+  console.log('Installation Details: ', details);
 });
 
-//var imported = document.createElement('script');
-//imported.src = '../bower_components/firebase/firebase.js';
-//document.head.appendChild(imported);
-
 window.onload = function checkHN() {
-  var hn = new Firebase('https://hacker-news.firebaseio.com/v0/maxitem/');
+  var hn = new Firebase('https://hacker-news.firebaseio.com/v0/');
+  var notificationId;
 
-  console.log(hn);
+  hn.child('maxitem').on('value', function (snapshot) {
+    var itemId = snapshot.val();
+    console.log('Id: ' + itemId);
 
-  hn.on('value', function (snapshot) {
-    console.log(snapshot.val());
+    hn.child('item/' + itemId).on('value', function (itemData) {
+      var itemDetails = itemData.val();
+      console.log(itemDetails);
+
+      if (itemDetails && itemDetails.hasOwnProperty('title') && itemDetails.hasOwnProperty('by')) {
+
+        chrome.notifications.create('', {
+          type: 'basic',
+          title: itemDetails.title,
+          message: 'by: ' + itemDetails.by,
+          iconUrl: '/images/icon-128.png'
+        }, function onCreation(notificationId) {
+          console.log('notificationId: ' + notificationId);
+
+          chrome.notifications.onClicked.addListener(function (notificationId) {
+            chrome.notifications.clear(notificationId);
+            chrome.tabs.create({ 'url': 'https://news.ycombinator.com/item?id=' + itemId });
+          });
+
+          console.log('Last error:', chrome.runtime.lastError);
+        });
+      }
+    });
   }, function (errorObject) {
     console.log('The read failed: ' + errorObject.code);
   });
-
-  console.log('value listener set');
-
-  hn.on('child_moved', function (childSnapshot, prevChildKey) {
-    console.log('child_moved');
-  });
-
-  hn.on('child_moved', function (oldChildSnapshot) {
-    console.log('child_moved');
-  });
-
-  console.log('child_moved listener set');
-
-  hn.on('child_changed', function (childSnapshot, prevChildKey) {
-    console.log('child_changed');
-  });
-
-  hn.on('child_changed', function (oldChildSnapshot) {
-    console.log('child_changed');
-  });
-
-  console.log('child_changed listener set');
-
-  hn.on('child_added', function (childSnapshot, prevChildKey) {
-    console.log('child_added');
-  });
-
-  hn.on('child_added', function (oldChildSnapshot) {
-    console.log('child_added');
-  });
-
-  console.log('child_added listener set');
-
-  hn.on('child_removed', function (oldChildSnapshot) {
-    console.log('child_removed');
-  });
-
-  console.log('child_removed listener set');
-
-  //console.log(hn);
-
-  //hn.on('value', function (snapshot) {
-  //  console.log(snapshot.val());
-  //});
 };
-
-//setInterval(checkHN, 5 * 1000);
-
-console.log('\'Allo \'Allo! Event Page');

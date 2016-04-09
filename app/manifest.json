@@ -17,6 +17,7 @@
     "persistent": true
   },
   "permissions": [
+    "tabs",
     "alarms",
     "background",
     "notifications"
