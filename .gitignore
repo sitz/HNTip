@@ -6,7 +6,8 @@ dist
 app/bower_components
 test/bower_components
 package
-
+app/scripts
+.DS_Store
 
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio

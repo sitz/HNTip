@@ -11,6 +11,7 @@ gulp.task('extras', () => {
   return gulp.src([
     'app/*.*',
     'app/_locales/**',
+    '!app/scripts.babel',
     '!app/*.json',
     '!app/*.html',
   ], {
@@ -27,29 +28,29 @@ function lint(files, options) {
   };
 }
 
-gulp.task('lint', lint('app/scripts/**/*.js', {
+gulp.task('lint', lint('app/scripts.babel/**/*.js', {
   env: {
-    es6: false
+    es6: true
   }
 }));
 
 gulp.task('images', () => {
   return gulp.src('app/images/**/*')
     .pipe($.if($.if.isFile, $.cache($.imagemin({
-      progressive: true,
-      interlaced: true,
-      // don't remove IDs from SVGs, they are often used
-      // as hooks for embedding and styling
-      svgoPlugins: [{cleanupIDs: false}]
-    }))
-    .on('error', function (err) {
-      console.log(err);
-      this.end();
-    })))
+        progressive: true,
+        interlaced: true,
+        // don't remove IDs from SVGs, they are often used
+        // as hooks for embedding and styling
+        svgoPlugins: [{cleanupIDs: false}]
+      }))
+      .on('error', function (err) {
+        console.log(err);
+        this.end();
+      })))
     .pipe(gulp.dest('dist/images'));
 });
 
-gulp.task('html',  () => {
+gulp.task('html', () => {
   return gulp.src('app/*.html')
     .pipe($.sourcemaps.init())
     .pipe($.if('*.js', $.uglify()))
@@ -70,17 +71,25 @@ gulp.task('chromeManifest', () => {
           'scripts/chromereload.js'
         ]
       }
-  }))
-  .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
-  .pipe($.if('*.js', $.sourcemaps.init()))
-  .pipe($.if('*.js', $.uglify()))
-  .pipe($.if('*.js', $.sourcemaps.write('.')))
-  .pipe(gulp.dest('dist'));
+    }))
+    .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
+    .pipe($.if('*.js', $.sourcemaps.init()))
+    .pipe($.if('*.js', $.uglify()))
+    .pipe($.if('*.js', $.sourcemaps.write('.')))
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task('babel', () => {
+  return gulp.src('app/scripts.babel/**/*.js')
+    .pipe($.babel({
+      presets: ['es2015']
+    }))
+    .pipe(gulp.dest('app/scripts'));
 });
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
-gulp.task('watch', ['lint', 'html'], () => {
+gulp.task('watch', ['lint', 'babel', 'html'], () => {
   $.livereload.listen();
 
   gulp.watch([
@@ -91,7 +100,7 @@ gulp.task('watch', ['lint', 'html'], () => {
     'app/_locales/**/*.json'
   ]).on('change', $.livereload.reload);
 
-  gulp.watch('app/scripts/**/*.js', ['lint']);
+  gulp.watch('app/scripts.babel/**/*.js', ['lint', 'babel']);
   gulp.watch('bower.json', ['wiredep']);
 });
 
@@ -110,13 +119,13 @@ gulp.task('wiredep', () => {
 gulp.task('package', function () {
   var manifest = require('./dist/manifest.json');
   return gulp.src('dist/**')
-      .pipe($.zip('HNTip-' + manifest.version + '.zip'))
-      .pipe(gulp.dest('package'));
+    .pipe($.zip('HNTip-' + manifest.version + '.zip'))
+    .pipe(gulp.dest('package'));
 });
 
 gulp.task('build', (cb) => {
   runSequence(
-    'lint', 'chromeManifest',
+    'lint', 'babel', 'chromeManifest',
     ['html', 'images', 'extras'],
     'size', cb);
 });
