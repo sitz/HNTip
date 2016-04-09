@@ -15,7 +15,7 @@ chrome.notifications.onClosed.addListener(function (notificationId) {
 chrome.notifications.onClicked.addListener(function (notificationId) {
   chrome.notifications.clear(notificationId);
   chrome.tabs.create({
-    url: 'https://news.ycombinator.com/item?id=' + notificationData[notificationId].id
+    'url': 'https://news.ycombinator.com/item?id=' + notificationData[notificationId].id
   });
 });
 
