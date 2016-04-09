@@ -20,7 +20,7 @@ window.onload = function checkHN() {
 
       if (itemDetails && itemDetails.hasOwnProperty('title') && itemDetails.hasOwnProperty('by')) {
 
-        chrome.notifications.create('', {
+        var currentNotificationId = chrome.notifications.create('', {
           type: 'basic',
           title: itemDetails.title,
           message: 'by: ' + itemDetails.by,
@@ -29,8 +29,10 @@ window.onload = function checkHN() {
           console.log('notificationId: ' + notificationId);
 
           chrome.notifications.onClicked.addListener(function (notificationId) {
-            chrome.notifications.clear(notificationId);
-            chrome.tabs.create({ 'url': 'https://news.ycombinator.com/item?id=' + itemId });
+            if (currentNotificationId === notificationId) {
+              chrome.notifications.clear(notificationId);
+              chrome.tabs.create({ 'url': 'https://news.ycombinator.com/item?id=' + itemId });
+            }
           });
 
           console.log('Last error:', chrome.runtime.lastError);
