@@ -1,19 +1,22 @@
-# Hacker News Tip
+# HNTip - Hacker News New Story Notifier
 
-A simple Google Chrome extension to notify you about the latest top item posted on Hacker News.
+A simple Chrome extension that notifies you whenever a new *story* is submitted to Hacker News.
 
-### Installation (Manual)
+![](icons/icon128.png)
 
-Since this is a simplified version without build tooling, you need to load it manually into Chrome:
+## Installation
 
-1.  Download or clone this repository's files.
-2.  Make sure you have placed your Firebase configuration details in `app/scripts/service-worker.js`.
-3.  You may need to manually download the Firebase SDK v9+ modular files (`firebase-app.js`, `firebase-database.js`, etc.) and place them in the `app/scripts/firebase/` directory (adjust paths in `service-worker.js` if needed).
-4.  Open Chrome and navigate to `chrome://extensions/`.
-5.  Enable "Developer mode" using the toggle switch in the top right corner.
-6.  Click the "Load unpacked" button.
-7.  Select the `app` directory from the project files.
-8.  The extension should now be installed and active.
+Since this extension is not on the Chrome Web Store, you need to load it manually from GitHub using Developer Mode:
 
----
-*Note: This extension relies on the Hacker News Firebase API.*
+1.  Download the code as a ZIP file from the GitHub repository: `https://github.com/sitz/HNTip`
+2.  Extract the contents of the downloaded `.zip` file to create the extension folder.
+3.  In Chrome, go to `chrome://extensions/` and ensure "Developer mode" is enabled.
+4.  Click "Load unpacked" (top-left) and select the extracted extension folder.
+
+## Usage
+
+Once installed, the extension starts working automatically. There's no browser action popup needed.
+
+* It will check for new stories in the background regularly.
+* When a new story is detected on Hacker News, a desktop notification will appear.
+* Click the notification to open the story's link in a new Chrome tab.
