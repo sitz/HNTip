@@ -1,22 +1,23 @@
-# HNTip - Hacker News New Story Notifier
+# Hacker News Tip
 
-A simple Chrome extension that notifies you whenever a new *story* is submitted to Hacker News.
+A Chrome extension that notifies you when new post make it to the Hacker News front page.
 
 ![](icons/icon128.png)
 
 ## Installation
 
-Since this extension is not on the Chrome Web Store, you need to load it manually from GitHub using Developer Mode:
+Since this extension is not on the Chrome Web Store, you need to load it manually using Developer Mode:
 
-1.  Download the code as a ZIP file from the GitHub repository: `https://github.com/sitz/HNTip`
-2.  Extract the contents of the downloaded `.zip` file to create the extension folder.
-3.  In Chrome, go to `chrome://extensions/` and ensure "Developer mode" is enabled.
-4.  Click "Load unpacked" (top-left) and select the extracted extension folder.
+1. Download the code as a ZIP file from the GitHub repository
+2. Extract the contents of the downloaded `.zip` file
+3. In Chrome, go to `chrome://extensions/` and enable "Developer mode"
+4. Click "Load unpacked" and select the extracted extension folder
 
 ## Usage
 
-Once installed, the extension starts working automatically. There's no browser action popup needed.
+Once installed, the extension works automatically:
 
-* It will check for new stories in the background regularly.
-* When a new story is detected on Hacker News, a desktop notification will appear.
-* Click the notification to open the story's link in a new Chrome tab.
+* Checks the front page frequently
+* Shows a notification when new post appear in the top 30
+* Click any notification to view the story's comments on Hacker News
+* No configuration needed - just install and forget

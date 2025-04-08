@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "HNTip",
-  "version": "1.0",
-  "description": "Notifies you when a new story is submitted to Hacker News.",
+  "name": "Hacker News Tip",
+  "version": "1.1",
+  "description": "Monitors front page of Hacker News and notifies when a new post makes the cut.",
   "permissions": [
     "alarms",
     "storage",
@@ -20,7 +20,7 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     },
-    "default_title": "HNTip"
+    "default_title": "Hacker News Tip"
   },
   "icons": {
     "16": "icons/icon16.png",
